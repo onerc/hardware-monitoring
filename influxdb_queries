@@ -1,23 +1,23 @@
 # cpu usage
 from(bucket: "coolestbucket")
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-  |> filter(fn: (r) => r["_measurement"] == "cpu")
-  |> filter(fn: (r) => r["_field"] == "usage_idle")
-  |> filter(fn: (r) => r["cpu"] =~ /cpu[0-9]/)
+  |> filter(fn: (r) => r._measurement == "cpu")
+  |> filter(fn: (r) => r._field == "usage_idle")
+  |> filter(fn: (r) => r.cpu == "cpu-total")
   |> map(fn: (r) => ({r with _value: 100.0 - r._value}))
-
-# igpu frequency
-from(bucket: "coolestbucket")
-  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
-  |> filter(fn: (r) => r._measurement == "intel_gpu_top")
-  |> filter(fn: (r) => r._field =~ /_actual/
-)
 
 # igpu usage
 from(bucket: "coolestbucket")
   |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
   |> filter(fn: (r) => r._measurement == "intel_gpu_top")
   |> filter(fn: (r) => r._field =~ /_busy/
+)
+
+# igpu frequency
+from(bucket: "coolestbucket")
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "intel_gpu_top")
+  |> filter(fn: (r) => r._field =~ /_actual/
 )
 
 # igpu power

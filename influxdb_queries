@@ -1,3 +1,16 @@
+# smart
+from(bucket: "coolestbucket")
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "smart_device")
+  |> filter(fn: (r) => r._field != "exit_status" // meaningless info
+                   and r._field != "power_cycle_count" // meaningless info
+                   and r._field != "command_timeout" // only one drive shows this info
+                   and r._field != "end_to_end_error" // only one drive shows this info
+    )
+  |> last()
+  |> keep(columns:["_field", "_value", "model"])
+
+
 # cpu usage
 from(bucket: "coolestbucket")
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
